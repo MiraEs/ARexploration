@@ -2,28 +2,46 @@ import ARKit
 
 class GameScene: SKScene {
   
-  var sceneView: ARSKView {
-    return view as! ARSKView
+  //MARK: CONSTANTS
+  private let neuralIntensity: CGFloat = 1000
+  private var blendFactor: CGFloat?
+  private var currentFrame: ARFrame? {
+    didSet {
+      currentFrame = sceneView.session.currentFrame
+    }
   }
   
-  var isWorldSetUp = false
+  //MARK: PRIVATE PROPERTIES
+  private var isWorldSetUp = false
+  
+  private var sceneView: ARSKView {
+    return view as! ARSKView
+  }
   
   override func update(_ currentTime: TimeInterval) {
     if !isWorldSetUp {
       setUpWorld()
     }
     
-    //Light estimate from current session's frame
-    // calculate blend factor 0(brightest) - 1
-    guard
-      let currentFrame = sceneView.session.currentFrame,
-      let lightEstimate = currentFrame.lightEstimate else {
+    lightEstimate()
+    setShadow()
+  }
+  
+  //MARK: SETUP
+  
+  private func lightEstimate() {
+    guard let currentFrame = currentFrame, let lightEstimate = currentFrame.lightEstimate else {
         return
     }
     
-    let neutralIntensity: CGFloat = 1000
-    let ambientIntensity = min(lightEstimate.ambientIntensity, neutralIntensity)
-    let blendFactor = 1 - ambientIntensity / neutralIntensity
+    let ambientIntensity = min(lightEstimate.ambientIntensity, neuralIntensity)
+    blendFactor = 1 - ambientIntensity / neuralIntensity
+  }
+  
+  private func setShadow() {
+    guard let blendFactor = blendFactor else {
+      return
+    }
     
     for node in children {
       if let bug = node as? SKSpriteNode {
@@ -33,10 +51,8 @@ class GameScene: SKScene {
     }
   }
   
-  //MARK: Private
-  
   private func setUpWorld() {
-    guard let currentFrame = sceneView.session.currentFrame else {
+    guard let currentFrame = currentFrame else {
       return
     }
     
