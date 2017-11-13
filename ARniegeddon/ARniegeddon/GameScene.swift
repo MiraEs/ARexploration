@@ -5,13 +5,11 @@ class GameScene: SKScene {
   //MARK: CONSTANTS
   private let neuralIntensity: CGFloat = 1000
   private var blendFactor: CGFloat?
-  private var currentFrame: ARFrame? {
-    didSet {
-      currentFrame = sceneView.session.currentFrame
-    }
-  }
+
+  //MARK: GAMEPLAY
+  private var sight: SKSpriteNode!
   
-  //MARK: PRIVATE PROPERTIES
+  //MARK: SETUP PROPERTIES
   private var isWorldSetUp = false
   
   private var sceneView: ARSKView {
@@ -27,10 +25,11 @@ class GameScene: SKScene {
     setShadow()
   }
   
-  //MARK: SETUP
+  //MARK: SETUP FUNCTIONS
   
   private func lightEstimate() {
-    guard let currentFrame = currentFrame, let lightEstimate = currentFrame.lightEstimate else {
+    guard let currentFrame = sceneView.session.currentFrame,
+          let lightEstimate = currentFrame.lightEstimate else {
         return
     }
     
@@ -52,7 +51,7 @@ class GameScene: SKScene {
   }
   
   private func setUpWorld() {
-    guard let currentFrame = currentFrame else {
+    guard let currentFrame = sceneView.session.currentFrame else {
       return
     }
     
@@ -65,5 +64,37 @@ class GameScene: SKScene {
     sceneView.session.add(anchor: anchor)
     
     isWorldSetUp = true
+  }
+  
+  //MARK: GAMEPLAY SETUP
+  override func didMove(to view: SKView) {
+    sight = SKSpriteNode(imageNamed: "sight")
+    addChild(sight)
+  }
+  
+  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    let location = sight.position
+    let hitNodes = nodes(at: location)
+    var hitBug: SKNode?
+    
+    //Set up "hit behavior" of nodes that are of type "bug"
+    for node in hitNodes {
+      if node.name == "bug" {
+        hitBug = node
+        break
+      }
+    }
+    
+    run(Sounds.fire)
+    if let hitBug = hitBug,
+      let anchor = sceneView.anchor(for: hitBug) {
+      let action = SKAction.run {
+        self.sceneView.session.remove(anchor: anchor)
+      }
+      let group = SKAction.group([Sounds.hit, action])
+      let sequence = [SKAction.wait(forDuration: 0.3), group]
+      hitBug.run(SKAction.sequence(sequence))
+    }
+    
   }
 }
