@@ -21,6 +21,7 @@
 		8297D50B1F34836D00C42D1F /* sprayFirebug.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8297D5041F34836C00C42D1F /* sprayFirebug.wav */; };
 		8297D50C1F34836D00C42D1F /* win.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8297D5051F34836C00C42D1F /* win.wav */; };
 		8297D5121F3487F700C42D1F /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8297D5111F3487F700C42D1F /* Types.swift */; };
+		E3318A331FB92699004B1355 /* Level1.sks in Resources */ = {isa = PBXBuildFile; fileRef = E3318A321FB92699004B1355 /* Level1.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		8297D5041F34836C00C42D1F /* sprayFirebug.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sprayFirebug.wav; sourceTree = "<group>"; };
 		8297D5051F34836C00C42D1F /* win.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = win.wav; sourceTree = "<group>"; };
 		8297D5111F3487F700C42D1F /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
+		E3318A321FB92699004B1355 /* Level1.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level1.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 				8288976C1F33F3920035005F /* AppDelegate.swift */,
 				828897741F33F3930035005F /* GameViewController.swift */,
 				828897721F33F3920035005F /* GameScene.swift */,
+				E3318A321FB92699004B1355 /* Level1.sks */,
 				8297D5111F3487F700C42D1F /* Types.swift */,
 				828897761F33F3930035005F /* Main.storyboard */,
 				828897791F33F3930035005F /* Assets.xcassets */,
@@ -169,6 +172,7 @@
 				8297D50A1F34836D00C42D1F /* sprayBug.mp3 in Resources */,
 				8288977D1F33F3940035005F /* LaunchScreen.storyboard in Resources */,
 				8297D50C1F34836D00C42D1F /* win.wav in Resources */,
+				E3318A331FB92699004B1355 /* Level1.sks in Resources */,
 				8297D50B1F34836D00C42D1F /* sprayFirebug.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

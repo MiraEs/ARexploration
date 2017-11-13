@@ -11,6 +11,7 @@ class GameScene: SKScene {
   
   //MARK: SETUP PROPERTIES
   private var isWorldSetUp = false
+  private let gameSize = CGSize(width: 2, height: 2)
   
   private var sceneView: ARSKView {
     return view as! ARSKView
@@ -18,14 +19,55 @@ class GameScene: SKScene {
   
   override func update(_ currentTime: TimeInterval) {
     if !isWorldSetUp {
-      setUpWorld()
+      //setUpWorld()
+      setupWorldWithLevel()
     }
     
     lightEstimate()
     setShadow()
   }
   
-  //MARK: SETUP FUNCTIONS
+  //MARK: SETUP WORLD
+  
+  private func setUpWorld() {
+    guard let currentFrame = sceneView.session.currentFrame else {
+      return
+    }
+    
+    //Sets node/image 0.3m in front of you in a 4x4 matrix, in front of camera
+    var translation = matrix_identity_float4x4
+    translation.columns.3.z = -0.3
+    
+    let transform = currentFrame.camera.transform * translation
+    let anchor = ARAnchor(transform: transform)
+    sceneView.session.add(anchor: anchor)
+    
+    isWorldSetUp = true
+  }
+  
+  private func setupWorldWithLevel() {
+    guard let currentFrame = sceneView.session.currentFrame,
+      let scene = SKScene(fileNamed: "Level1") else {
+        return
+    }
+    
+    for node in scene.children {
+      if let node = node as? SKSpriteNode {
+        var translation = matrix_identity_float4x4
+        let positionX = node.position.x / scene.size.width
+        let positionY = node.position.y / scene.size.height
+        
+        translation.columns.3.x = Float(positionX * gameSize.width)
+        translation.columns.3.z = -Float(positionY * gameSize.height)
+        
+        let transform = currentFrame.camera.transform * translation
+        let anchor = ARAnchor(transform: transform)
+        sceneView.session.add(anchor: anchor)
+      }
+    }
+    
+    isWorldSetUp = true
+  }
   
   private func lightEstimate() {
     guard let currentFrame = sceneView.session.currentFrame,
@@ -50,23 +92,7 @@ class GameScene: SKScene {
     }
   }
   
-  private func setUpWorld() {
-    guard let currentFrame = sceneView.session.currentFrame else {
-      return
-    }
-    
-    //Sets node/image 0.3m in front of you in a 4x4 matrix, in front of camera
-    var translation = matrix_identity_float4x4
-    translation.columns.3.z = -0.3
-    
-    let transform = currentFrame.camera.transform * translation
-    let anchor = ARAnchor(transform: transform)
-    sceneView.session.add(anchor: anchor)
-    
-    isWorldSetUp = true
-  }
-  
-  //MARK: GAMEPLAY SETUP
+  //MARK: SETUP GAMEPLAY
   override func didMove(to view: SKView) {
     sight = SKSpriteNode(imageNamed: "sight")
     addChild(sight)
